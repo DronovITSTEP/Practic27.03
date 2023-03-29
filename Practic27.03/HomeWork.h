@@ -31,6 +31,7 @@ class HomeWork
 	
 public:
 	double avg = 0;
+	int numberOfSeats = 0;
 	HomeWork(int tPass, int tBus) : 
 		countPass{ 0 }, time_pass{ tPass }, time_bus{tBus} {
 		passHead = nullptr;
@@ -64,13 +65,16 @@ public:
 		}
 	}
 
-	void ArrivalBus() {
+	void ArrivalBus(bool final = false) {
 		for (int i = 0; i < time_bus; i++) {
 			if (i%time_pass == 0)
 				AddPassenger();
 		}
-		int numberOfSeats = rand() % 10;
-		PrintPassenger();
+		if (!final)
+			numberOfSeats = rand() % 10;
+		else
+			numberOfSeats = 16;
+		//PrintPassenger();
 		while (numberOfSeats != 0)
 		{
 			DelPassenger(); 
@@ -78,13 +82,13 @@ public:
 			
 		}
 		//PrintPassenger();
-		cout << endl;
+		//cout << endl;
 		avg += AveragePass();
 	}
-
 	double AveragePass() {
 		Pass* p = passHead;
 		int avgTime = 0;
+		if (p == nullptr) return 0;
 		while (p->next != nullptr)
 		{
 			avgTime += p->time;
@@ -92,7 +96,6 @@ public:
 		}
 		return (double)avgTime / countPass;
 	}
-
 	bool IsInterval(double N, double M) {
 		if (N < M) {
 			time_bus--;
@@ -107,6 +110,18 @@ public:
 			<< AveragePass() << endl;
 		cout << "Время приезда автобуса -> "
 			<< time_bus << endl;
+		cout << "Количество свободных мест -> " << numberOfSeats << endl;
 	}
+
+	void Reset() {
+		avg = 0;
+		DelAllPassenger();
+	}
+	void DelAllPassenger() {
+		while (countPass != 0) {
+			DelPassenger();
+		}
+	}
+	int GetTimeBus() { return time_bus; }
 };
 
